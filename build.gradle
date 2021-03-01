@@ -1,0 +1,67 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.3'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.benefitj'
+version = '0.1.0-SNAPSHOT'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+tasks.withType(Javadoc) {
+	options.encoding = "UTF-8"
+}
+
+task sourceJar(type: Jar) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+artifacts.archives sourceJar
+
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+	mavenCentral()
+	jcenter()
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: ['*.jar'])
+	compile fileTree(dir: 'libs/jar', include: ['*.jar'])
+	compileOnly fileTree(dir: 'libs/source', include: ['*.jar'])
+
+	testCompile 'junit:junit:4.13.2'
+
+	compile 'org.projectlombok:lombok:1.18.18'
+	annotationProcessor 'org.projectlombok:lombok:1.18.18'
+
+	compile 'javax.inject:javax.inject:1'
+	//compile 'javax.annotation:javax.annotation-api:1.3.2'
+//	compile 'com.google.code.findbugs:jsr305:3.0.2'
+	compile 'org.slf4j:slf4j-log4j12:1.7.30'
+	testCompile 'org.slf4j:slf4j-simple:1.7.30'
+
+	compile 'org.apache.commons:commons-lang3:3.11'
+	compile 'com.alibaba:fastjson:1.2.75'
+}
+
+test {
+	useJUnitPlatform()
+}
