@@ -30,7 +30,7 @@ public class JavaStructManager {
   /**
    * 字符串编码
    */
-  private String charset = Charset.defaultCharset().name();
+  private String charset = "UTF-8";
   /**
    * 二进制转换工具
    */

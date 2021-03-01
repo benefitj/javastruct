@@ -9,13 +9,7 @@ import org.junit.Test;
 import java.util.Date;
 
 public class JavaStructManagerTest {
-  public static void main(String[] args) {
-    JavaStructManagerTest t = new JavaStructManagerTest();
 
-//    t.testBytes();
-    t.testParse();
-
-  }
 
   private JavaStructManager manager = JavaStructManager.INSTANCE;
   /**
