@@ -51,7 +51,7 @@ public class DefaultStructResolver implements StructResolver {
     PrimitiveType pt = PrimitiveType.valueOf(f.getType());
     JavaStructField jsf = f.getAnnotation(JavaStructField.class);
 
-    if (pt == PrimitiveType.STRING && jsf.size() <= 0) {
+    if (jsf.size() <= 0) {
       throw new IllegalStateException(String.format(
           "请指定[%s.%s]的长度", f.getDeclaringClass().getName(), f.getName()));
     }

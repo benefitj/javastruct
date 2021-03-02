@@ -1,6 +1,7 @@
 package com.benefitj.javastruct;
 
 import com.alibaba.fastjson.JSON;
+import com.benefitj.javastruct.entity.LeadWave;
 import com.benefitj.javastruct.entity.Person;
 import org.junit.After;
 import org.junit.Before;
@@ -68,6 +69,15 @@ public class JavaStructManagerTest {
     Person person = manager.parseObject(Person.class, binary.hexToBytes(hex));
     System.err.println("testResolver时间: " + (System.nanoTime() - start));
     System.err.println(JSON.toJSONString(person));
+  }
+
+  @Test
+  public void testLeadWave() {
+    String hex = "603dcd820000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000fff8ff3bffff0000ffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001bc02de042804fb05930623063f066f0666059d053f049503e601d6016600000000000000000000000000000000000000000000000000000000000000000000ffeafba3f912014d0bfa1c3d273737d640772efd21740da50038ecb5ef98f9eefff700000000000000000000000000000000000000000000000000000000015d005d003100fb01cf01b401c9028103010310037a03e904ba04e0053505d506a10700075407dc08ee0a3a0b3b0c6c0ddc0ed20f7c0f370ecb0e190d7e0d170d140b7507f505ad0337022a000a000000000000000000000000000000000000000000000000000000000000";
+    long start = System.nanoTime();
+    LeadWave lw = manager.parseObject(LeadWave.class, binary.hexToBytes(hex));
+    System.err.println("testResolver时间: " + (System.nanoTime() - start));
+    System.err.println(JSON.toJSONString(lw));
   }
 
 }
