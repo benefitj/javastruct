@@ -17,6 +17,10 @@ public class StructClass {
    */
   private final List<StructField> fields = new LinkedList<>();
   /**
+   * 实例化器
+   */
+  private Instantiator instantiator;
+  /**
    * 结构体长度
    */
   private int size;
@@ -31,6 +35,14 @@ public class StructClass {
 
   public List<StructField> getFields() {
     return fields;
+  }
+
+  public Instantiator getInstantiator() {
+    return instantiator;
+  }
+
+  public void setInstantiator(Instantiator instantiator) {
+    this.instantiator = instantiator;
   }
 
   public int getSize() {
@@ -68,20 +80,19 @@ public class StructClass {
    * @return 返回解析的对象
    */
   public <T> T parseObject(byte[] data, int start) {
-    if (data.length - start < getSize()) {
+    /*if (data.length - start < getSize()) {
       throw new IllegalArgumentException(
           "数据长度不够，要求长度" + getSize() + "，实际长度" + (data.length - start));
-    }
+    }*/
 
-    Object o;
-    try {
-      o = getType().newInstance();
-    } catch (InstantiationException | IllegalAccessException e) {
-      throw new IllegalStateException(e);
-    }
-
+    // 创建对象
+    Object o = getInstantiator().create(getType());
     int index = 0;
     for (StructField sf : getFields()) {
+      if ((sf.size() + index) > (data.length - start)) {
+        // 多余数据不做处理
+        break;
+      }
       Object value = sf.getConverter().parse(sf, data, index);
       if (value != null) {
         StructUtils.setFieldValue(sf.getField(), o, value);

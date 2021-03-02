@@ -6,7 +6,12 @@ import com.benefitj.javastruct.StructField;
 
 import java.lang.reflect.Field;
 
-public interface FieldConverter<T> {
+/**
+ * 转换器
+ *
+ * @param <T>
+ */
+public interface Converter<T> {
 
   /**
    * 是否支持的类型

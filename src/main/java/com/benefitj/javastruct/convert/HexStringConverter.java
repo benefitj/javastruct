@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 /**
  * 16进制字符串转换
  */
-public class HexStringConverter extends AbstractFieldConverter<String> {
+public class HexStringConverter extends AbstractConverter<String> {
 
   public HexStringConverter() {
   }

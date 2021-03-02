@@ -12,12 +12,12 @@ import java.nio.charset.Charset;
  *
  * @author DINGXIUAN
  */
-public class DefaultPrimitiveFieldConverter extends AbstractFieldConverter<Object> {
+public class DefaultPrimitiveConverter extends AbstractConverter<Object> {
 
-  public DefaultPrimitiveFieldConverter() {
+  public DefaultPrimitiveConverter() {
   }
 
-  public DefaultPrimitiveFieldConverter(boolean local) {
+  public DefaultPrimitiveConverter(boolean local) {
     super(local);
   }
 

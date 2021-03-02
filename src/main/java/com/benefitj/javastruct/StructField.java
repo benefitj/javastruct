@@ -1,6 +1,6 @@
 package com.benefitj.javastruct;
 
-import com.benefitj.javastruct.convert.FieldConverter;
+import com.benefitj.javastruct.convert.Converter;
 
 import java.lang.reflect.Field;
 import java.nio.ByteOrder;
@@ -23,9 +23,9 @@ public class StructField {
    */
   private JavaStructField annotation;
   /**
-   * 解析器
+   * 转换器
    */
-  private FieldConverter converter;
+  private Converter converter;
   /**
    * 字符串的编码
    */
@@ -72,11 +72,11 @@ public class StructField {
     this.annotation = annotation;
   }
 
-  public FieldConverter getConverter() {
+  public Converter getConverter() {
     return converter;
   }
 
-  public void setConverter(FieldConverter converter) {
+  public void setConverter(Converter converter) {
     this.converter = converter;
   }
 

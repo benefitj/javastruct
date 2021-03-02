@@ -1,12 +1,11 @@
 package com.benefitj.javastruct;
 
 
-import com.benefitj.javastruct.convert.DateTimeFieldConverter;
-import com.benefitj.javastruct.convert.DefaultPrimitiveFieldConverter;
-import com.benefitj.javastruct.convert.FieldConverter;
+import com.benefitj.javastruct.convert.DateTimeConverter;
+import com.benefitj.javastruct.convert.DefaultPrimitiveConverter;
+import com.benefitj.javastruct.convert.Converter;
 import com.benefitj.javastruct.convert.HexStringConverter;
 
-import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -22,7 +21,11 @@ public class JavaStructManager {
   /**
    * 字段解析器
    */
-  private final Map<Class<?>, FieldConverter<?>> fieldConverters = Collections.synchronizedMap(new LinkedHashMap<>());
+  private final Map<Class<?>, Converter<?>> converters = Collections.synchronizedMap(new LinkedHashMap<>());
+  /**
+   * 实例化器
+   */
+  private final Map<Class<?>, Instantiator> instantiators = Collections.synchronizedMap(new LinkedHashMap<>());
   /**
    * 缓存的类
    */
@@ -55,9 +58,12 @@ public class JavaStructManager {
    */
   public void setup() {
     // 初始化解析器
-    this.put(new DefaultPrimitiveFieldConverter());
-    this.put(new DateTimeFieldConverter());
-    this.put(new HexStringConverter());
+    this.addConverter(new DefaultPrimitiveConverter());
+    this.addConverter(new DateTimeConverter());
+    this.addConverter(new HexStringConverter());
+
+    // 默认的实例化器
+    this.addInstantiator(Instantiator.class, new DefaultInstantiator());
 
     if (this.structResolver == null) {
       this.structResolver = new DefaultStructResolver();
@@ -101,16 +107,16 @@ public class JavaStructManager {
   /**
    * 字段转换器
    */
-  public Map<Class<?>, FieldConverter<?>> getFieldConverters() {
-    return fieldConverters;
+  public Map<Class<?>, Converter<?>> getConverters() {
+    return converters;
   }
 
-  public FieldConverter<?> put(FieldConverter converter) {
-    return put(converter.getClass(), converter);
+  public Converter<?> addConverter(Converter converter) {
+    return addConverter(converter.getClass(), converter);
   }
 
-  public FieldConverter<?> put(Class<? extends FieldConverter> type, FieldConverter converter) {
-    return getFieldConverters().put(type, converter);
+  public Converter<?> addConverter(Class<? extends Converter> type, Converter converter) {
+    return getConverters().put(type, converter);
   }
 
   /**
@@ -119,8 +125,27 @@ public class JavaStructManager {
    * @param resolverType 解析器类型
    * @return 返回对应的解析器
    */
-  public FieldConverter getFieldResolver(Class<?> resolverType) {
-    return getFieldConverters().get(resolverType);
+  public Converter getFieldResolver(Class<?> resolverType) {
+    return getConverters().get(resolverType);
+  }
+
+  /**
+   * 获取全部的实例化器
+   */
+  public Map<Class<?>, Instantiator> getInstantiators() {
+    return instantiators;
+  }
+
+  public Instantiator addInstantiator(Instantiator instantiator) {
+    return addInstantiator(instantiator.getClass(), instantiator);
+  }
+
+  public Instantiator addInstantiator(Class<? extends Instantiator> type, Instantiator instantiator) {
+    return getInstantiators().put(type, instantiator);
+  }
+
+  public Instantiator findInstantiator(Class<? extends Instantiator> instantiatorType) {
+    return getInstantiators().get(instantiatorType);
   }
 
   public BinaryHelper getBinary() {

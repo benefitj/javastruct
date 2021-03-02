@@ -38,6 +38,11 @@ public class Person {
    */
   @JavaStructField(size = 4)
   private Date createTime;
+  /**
+   * 新添加的字段
+   */
+  @JavaStructField(size = 21)
+  private String hello;
 
   public String getName() {
     return name;
@@ -87,4 +92,11 @@ public class Person {
     this.hex = hex;
   }
 
+  public String getHello() {
+    return hello;
+  }
+
+  public void setHello(String hello) {
+    this.hello = hello;
+  }
 }

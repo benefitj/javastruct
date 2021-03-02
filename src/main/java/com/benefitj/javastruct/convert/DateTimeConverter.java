@@ -11,12 +11,12 @@ import java.util.Date;
 /**
  * 时间戳转换器
  */
-public class DateTimeFieldConverter extends AbstractFieldConverter<Object> {
+public class DateTimeConverter extends AbstractConverter<Object> {
 
-  public DateTimeFieldConverter() {
+  public DateTimeConverter() {
   }
 
-  public DateTimeFieldConverter(boolean local) {
+  public DateTimeConverter(boolean local) {
     super(local);
   }
 

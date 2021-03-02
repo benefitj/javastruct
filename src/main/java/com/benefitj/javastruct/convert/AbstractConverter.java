@@ -13,12 +13,12 @@ import java.util.function.Function;
  *
  * @param <T>
  */
-public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T> {
+public abstract class AbstractConverter<T> extends BufCopyConverter<T> {
 
-  public AbstractFieldConverter() {
+  public AbstractConverter() {
   }
 
-  public AbstractFieldConverter(boolean local) {
+  public AbstractConverter(boolean local) {
     super(local);
   }
 
@@ -214,6 +214,10 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
    */
   public byte[] convertByteArray(StructField field, Object value) {
     if (value.getClass() == byte[].class) {
+      PrimitiveType pt = field.getPrimitiveType();
+      if (field.getArrayLength() == pt.arrayLength(value)) {
+        return copy((byte[]) value, 0, field.getArrayLength());
+      }
       byte[] array = (byte[]) value;
       byte[] buf = new byte[field.size()];
       return convertArray(field, i -> {
@@ -235,7 +239,7 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
    *
    * @param field 字段信息
    * @param value 值
-   * @return 返回转换后的数据
+   * @return 返回转换后的字节数组
    */
   public byte[] convertShortArray(StructField field, Object value) {
     if (value.getClass() == short[].class) {
@@ -248,11 +252,11 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 转换布尔数组类型
+   * 转换整型数组
    *
    * @param field 字段信息
    * @param value 值
-   * @return 返回转换后的数据
+   * @return 返回转换后的字节数组
    */
   public byte[] convertIntegerArray(StructField field, Object value) {
     if (value.getClass() == int[].class) {
@@ -265,11 +269,11 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 转换布尔数组类型
+   * 转换长整型数组
    *
    * @param field 字段信息
    * @param value 值
-   * @return 返回转换后的数据
+   * @return 返回转换后的字节数组
    */
   public byte[] convertLongArray(StructField field, Object value) {
     if (value.getClass() == long[].class) {
@@ -282,11 +286,11 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 转换布尔数组类型
+   * 转换单精度浮点数数组
    *
    * @param field 字段信息
    * @param value 值
-   * @return 返回转换后的数据
+   * @return 返回转换后的字节数组
    */
   public byte[] convertFloatArray(StructField field, Object value) {
     if (value.getClass() == float[].class) {
@@ -300,11 +304,11 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 转换布尔数组类型
+   * 转换双精度浮点数数组
    *
    * @param field 字段信息
    * @param value 值
-   * @return 返回转换后的数据
+   * @return 返回转换后的字节数组
    */
   public byte[] convertDoubleArray(StructField field, Object value) {
     if (value.getClass() == double[].class) {
@@ -318,11 +322,11 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 转换布尔数组类型
+   * 转换数组
    *
    * @param field 字段信息
    * @param func  数组处理的函数
-   * @return 返回转换后的数据
+   * @return 返回转换后的字节数组
    */
   public byte[] convertArray(StructField field, ArrayConverterFunction func) {
     int ratio = field.getFieldSize();
@@ -379,7 +383,7 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 解析
+   * 解析短整数
    *
    * @param field    字段
    * @param data     数据
@@ -392,7 +396,7 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 解析
+   * 解析整数
    *
    * @param field    字段
    * @param data     数据
@@ -405,7 +409,7 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 解析
+   * 解析长整数
    *
    * @param field    字段
    * @param data     数据
@@ -418,7 +422,7 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 解析
+   * 解析单精度浮点数
    *
    * @param field    字段
    * @param data     数据
@@ -431,13 +435,13 @@ public abstract class AbstractFieldConverter<T> extends BufCopyFieldConverter<T>
   }
 
   /**
-   * 解析
+   * 解析双精度浮点数
    *
    * @param field    字段
    * @param data     数据
    * @param position 开始的位置
    * @param signed   是否有符号
-   * @return 返回转换的单精度浮点数
+   * @return 返回转换的双精度浮点数
    */
   public double parseDouble(StructField field, byte[] data, int position, boolean signed) {
     return Double.longBitsToDouble(parseLong(field, data, position, signed));

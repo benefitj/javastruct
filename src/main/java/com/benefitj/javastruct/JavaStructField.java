@@ -1,6 +1,6 @@
 package com.benefitj.javastruct;
 
-import com.benefitj.javastruct.convert.FieldConverter;
+import com.benefitj.javastruct.convert.Converter;
 
 import java.lang.annotation.*;
 
@@ -29,7 +29,7 @@ public @interface JavaStructField {
   /**
    * 转换器
    */
-  Class<? extends FieldConverter> converter() default FieldConverter.class;
+  Class<? extends Converter> converter() default Converter.class;
 
   /**
    * 字节编码

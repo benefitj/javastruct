@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
  *
  * @param <T>
  */
-public abstract class BufCopyFieldConverter<T> implements FieldConverter<T> {
+public abstract class BufCopyConverter<T> implements Converter<T> {
   /**
    * 二进制工具
    */
@@ -23,10 +23,10 @@ public abstract class BufCopyFieldConverter<T> implements FieldConverter<T> {
    */
   private boolean local = true;
 
-  public BufCopyFieldConverter() {
+  public BufCopyConverter() {
   }
 
-  public BufCopyFieldConverter(boolean local) {
+  public BufCopyConverter(boolean local) {
     this.local = local;
   }
 
@@ -80,13 +80,23 @@ public abstract class BufCopyFieldConverter<T> implements FieldConverter<T> {
    *
    * @param src    原数据
    * @param srcPos 原数据开始的位置
+   * @return 返回拷贝的数据
+   */
+  public byte[] copy(byte[] src, int srcPos) {
+    return copy(src, srcPos, src.length - srcPos);
+  }
+
+  /**
+   * 拷贝
+   *
+   * @param src    原数据
+   * @param srcPos 原数据开始的位置
    * @param len    长度
    * @return 返回拷贝的数据
    */
   public byte[] copy(byte[] src, int srcPos, int len) {
     byte[] buf = getCache(len);
-    copy(src, srcPos, buf, 0, len);
-    return buf;
+    return copy(src, srcPos, buf, 0, len);
   }
 
   /**

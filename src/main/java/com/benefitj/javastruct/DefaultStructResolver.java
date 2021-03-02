@@ -1,6 +1,6 @@
 package com.benefitj.javastruct;
 
-import com.benefitj.javastruct.convert.FieldConverter;
+import com.benefitj.javastruct.convert.Converter;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -19,7 +19,15 @@ public class DefaultStructResolver implements StructResolver {
     if (jsc == null) {
       throw new IllegalStateException("不支持的结构类[" + type + "]，请使用@ClassStruct注释！");
     }
+
+    Instantiator instantiator = manager.findInstantiator(jsc.instantiator());
+    if (instantiator == null) {
+      throw new IllegalStateException(String.format(
+          "无法发现结构对象的实例器\"%s.[%s]\"", type, jsc.instantiator()));
+    }
+
     StructClass structClass = new StructClass(type);
+    structClass.setInstantiator(instantiator);
     StructUtils.foreachField(type
         , f -> f.isAnnotationPresent(JavaStructField.class)
         , f -> structClass.getFields().add(createStructField(manager, f))
@@ -52,7 +60,7 @@ public class DefaultStructResolver implements StructResolver {
           "请指定数组数组的长度: %s.%s", f.getDeclaringClass().getName(), f.getName()));
     }
 
-    FieldConverter<?> fc = findFieldConverter(manager, f, jsf, pt);
+    Converter<?> fc = findFieldConverter(manager, f, jsf, pt);
     StructField structField = new StructField(f);
     structField.setPrimitiveType(pt);
     structField.setAnnotation(jsf);
@@ -70,16 +78,16 @@ public class DefaultStructResolver implements StructResolver {
    * @param pt  基本数据类型
    * @return 返回解析器
    */
-  protected FieldConverter<?> findFieldConverter(JavaStructManager manager,
-                                                 Field f,
-                                                 JavaStructField jsf,
-                                                 PrimitiveType pt) {
-    FieldConverter<?> fc = null;
-    if (jsf.converter() != FieldConverter.class) {
+  protected Converter<?> findFieldConverter(JavaStructManager manager,
+                                            Field f,
+                                            JavaStructField jsf,
+                                            PrimitiveType pt) {
+    Converter<?> fc = null;
+    if (jsf.converter() != Converter.class) {
       fc = manager.getFieldResolver(jsf.converter());
     } else {
-      for (Map.Entry<Class<?>, FieldConverter<?>> entry : manager.getFieldConverters().entrySet()) {
-        FieldConverter<?> value = entry.getValue();
+      for (Map.Entry<Class<?>, Converter<?>> entry : manager.getConverters().entrySet()) {
+        Converter<?> value = entry.getValue();
         if (value.support(f, jsf, pt)) {
           fc = value;
           break;

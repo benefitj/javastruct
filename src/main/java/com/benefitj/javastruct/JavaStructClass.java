@@ -18,4 +18,9 @@ public @interface JavaStructClass {
    */
   int value() default 0;
 
+  /**
+   * 实例化器
+   */
+  Class<Instantiator> instantiator() default Instantiator.class;
+
 }
